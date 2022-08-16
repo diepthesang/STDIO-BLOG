@@ -3,7 +3,7 @@ const route = express.Router()
 
 route.get('/status', (req, res, next) => {
     res.json({
-        message: 'hello nek'
+        message: 'hello nekd'
     })
 })
 
