@@ -1,6 +1,6 @@
 var db = require('../db/models/index')
 const bcrypt = require('bcrypt')
-
+require('dotenv').config()
 
 module.exports = {
     createNewAccount: async (email, password, userName, age, gender, avatar) => {
@@ -34,7 +34,6 @@ module.exports = {
                     where: {
                         email: email
                     }
-
                 }
             )
 
