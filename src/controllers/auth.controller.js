@@ -1,4 +1,4 @@
-const { getUserByEmail, getUserByUserName, createNewAccount } = require("../services/auth.services");
+const { getUserByEmail, getUserByUserName, createNewAccount, getUserByUserId, updateUserByUserId } = require("../services/auth.services");
 const JWT = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
@@ -152,7 +152,7 @@ module.exports = {
                         )
                     }
                 } catch (error) {
-                    return res.json(err)
+                    return res.json(error)
                 }
             });
 
@@ -160,7 +160,9 @@ module.exports = {
     },
 
     updateInfoAccount: async (req, res, next) => {
-        const { password, userName, age, gender, avatar } = req.body;
+        const { password, confirmPassword, userName, age, gender, avatar } = req.body;
+        let userId = req.user.id
+
         if (!password || !userName || !age || !gender || !avatar) {
             return res.status(422).json(
                 {
@@ -168,7 +170,50 @@ module.exports = {
                 }
             )
         }
+
+        //xac thuc
+
+        if (age < 16) {
+            return res.status(422).json(
+                {
+                    message: 'Bạn không đủ tuổi để đăng kí tài khoản'
+                }
+            )
+        }
+
+        if (gender < 1 || gender > 3) {
+            return res.status(422).json(
+                {
+                    message: 'Giới tính phải nằm trong nam hoặc nữ hoặc giới tính khác'
+                }
+            )
+        }
+
+        if (password.replace(/\s/g, '').length <= 6) {
+            return res.status(422).json(
+                {
+                    message: 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
+                }
+            )
+        }
+
+        if (password !== confirmPassword) {
+            return res.status(422).json(
+                {
+                    message: 'Mật khẩu xác thực không khớp'
+                }
+            )
+        }
+
+        await updateUserByUserId(userId, password, userName, age, gender, avatar)
+        return res.status(200).json(
+            {
+                message: 'Cập nhật tài khoản thành công'
+            }
+        )
+
     }
+
 }
 
 

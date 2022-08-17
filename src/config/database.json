@@ -2,7 +2,7 @@
   "development": {
     "username": "sqluser",
     "password": "123",
-    "database": "database_STDIO_BLOG",
+    "database": "stdio-blog",
     "host": "localhost",
     "dialect": "mysql",
     "logging": false,

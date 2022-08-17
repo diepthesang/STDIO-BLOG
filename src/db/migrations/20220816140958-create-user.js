@@ -23,6 +23,12 @@ module.exports = {
       gender: {
         type: Sequelize.STRING
       },
+      avatar: {
+        type: Sequelize.STRING
+      },
+      role: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -31,9 +37,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      avatar: {
-        type: Sequelize.STRING
-      },
+
     });
   },
   async down(queryInterface, Sequelize) {

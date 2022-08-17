@@ -12,10 +12,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       status: {
         type: Sequelize.STRING
@@ -23,7 +23,10 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING
       },
-      avatar: {
+      userId: {
+        type: Sequelize.STRING
+      },
+      cateId: {
         type: Sequelize.STRING
       },
       createdAt: {

@@ -1,0 +1,23 @@
+
+câu 1:
+- Stack (ngăn xếp) : 
+* là một cấu trúc dữ liệu trừu tượng thực hiện theo nguyền lí vào sau ra trước (Last In Fist Out).Tức là phần tử cuối cùng được chèn vào ngăn xếp sẽ là là phần tử đầu tiên được lấy ra khỏi ngăn xếp.
+* Các thao tác được sử dụng cho ngăn xếp :
+Push: Thêm một phần tử vào đỉnh của ngăn xếp, số phần tử của ngăn xếp tăng lên 1.
+Pop: Xóa bỏ phần tử đầu tiên ở đỉnh của ngăn xếp, số phần tử của ngăn xếp giảm đi 1.
+Top: Lấy giá trị của phần tử đầu tiên ở đỉnh của ngăn xếp, số phần tử của ngăn xếp không thay đổi.
+IsEmpty: Kiểm tra ngăn xếp trống hay không. Ngăn xếp trống là ngăn xếp không có phần tử nào.
+IsFull: Kiểm tra ngăn xếp đã đầy hay chưa. Thao tác này không phải lúc nào cũng có.
+Size: Lấy số lượng phần tử stack đang có.
+
+- Queue (Hàng đợi) :
+* là một cấu trúc dữ liệu trừu tượng thực hiện theo nguyên lý vào trước ra trước (First In First Out).Tức là phần tử đầu tiên được chèn vào sẽ được lấy ra đầu tiên.
+* Các thao tác sử dụng với hàng đợi :
+EnQueue: Thêm phần tử vào cuối(rear) của Queue.
+DeQueue: Xóa phần tử khỏi đầu(front) của Queue. Nếu Queue rỗng thì thông báo lỗi.
+IsEmpty: Kiểm tra Queue rỗng.
+Front: Lấy giá trị của phần tử ở đầu(front) của Queue. Lấy giá trị không làm thay đổi Queue.
+
+Câu 2:
+- Để hợp nhất hai dãy học sinh này thành một mà vẫn đảm bảo được tính chất chiều cao tăng dần của dãy.
++ Đầu tiên chúng ta lấy từng học sinh của dãy 1 so sánh với từng học sinh của dãy 2. Nếu học sinh nào thấp hơn hoặc bằng sẽ được cho vào dãy 3. Làm tương tự cho đến hết dãy 1 hoặc 2 (dãy nào có học sinh cuối cùng thấp hơn hoặc bằng sẽ bị lấy hết). Nên những học sinh cao hơn hoặc bằng đứng cuối cùng của dãy còn lại sẽ bị dư ra và không được cho vào dãy 3. Bởi vì không còn học sinh nào thấp hơn bằng của dãy khác để so sánh. Lúc này chúng ta sẽ bỏ tất cả học sinh còn lại của dãy đó vào dãy 3.
