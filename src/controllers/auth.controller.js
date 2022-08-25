@@ -7,156 +7,146 @@ require('dotenv').config()
 
 module.exports = {
     createNewAccount: async (req, res, next) => {
-        const { email, password, confirmPassword, userName, age, gender, avatar } = req.body
+        let err = new Error()
+        try {
+            const { email, password, confirmPassword, userName, age, gender, avatar } = req.body
 
-        if (!email || !password || !confirmPassword || !userName || !age || !gender || !avatar) {
-            return res.status(422).json(
-                {
-                    message: 'Cần điền đầy đủ thông tin để tạo tài khoản'
-                }
-            )
-        }
-
-        if (age < 16) {
-            return res.status(422).json(
-                {
-                    message: 'Bạn không đủ tuổi để đăng kí tài khoản'
-                }
-            )
-        }
-
-        if (gender < 1 || gender > 3) {
-            return res.status(422).json(
-                {
-                    message: 'Giới tính phải nằm trong nam hoặc nữ hoặc giới tính khác'
-                }
-            )
-        }
-
-
-
-        if (!validateEmail(email)) {
-            return res.status(422).json(
-                {
-                    message: 'Email không được xác thực'
-                }
-            )
-        }
-
-        if (email) {
-            let checkExistEmail = await getUserByEmail(email);
-            if (checkExistEmail) {
-                return res.status(422).json(
-                    {
-                        message: 'Email đã tồn tại'
-                    }
-                )
+            if (!email || !password || !confirmPassword || !userName || !age || !gender || !avatar) {
+                err.message = 'Cần điền đẩy đủ thông tin để tạo tại khoản'
+                err.status = 422;
+                next(err)
             }
-        }
 
-        if (password.replace(/\s/g, '').length <= 6) {
-            return res.status(422).json(
-                {
-                    message: 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
-                }
-            )
-        }
-
-        if (password !== confirmPassword) {
-            return res.status(422).json(
-                {
-                    message: 'Mật khẩu xác thực không khớp'
-                }
-            )
-        }
-
-        if (userName) {
-            let checkExistUserName = await getUserByUserName(userName);
-            if (checkExistUserName) {
-                return res.status(422).json(
-                    {
-                        message: 'Username đã tồn tại'
-                    }
-                )
+            if (age < 16) {
+                err.message = 'Bạn không đủ tuổi để đăng kí tài khoản'
+                err.status = 422;
+                next(err)
             }
-        };
 
-        if (email && password && confirmPassword && userName && age && gender && avatar) {
+            if (gender < 1 || gender > 3) {
+                err.message = 'Giới tính phải nằm trong nam hoặc nữ hoặc giới tính khác'
+                err.status = 422;
+                next(err)
+            }
 
-            await createNewAccount(email, password, userName, age, gender, avatar)
-            return res.status(200).json(
-                {
-                    message: 'Tạo tài khoản thành công'
+
+
+            if (!validateEmail(email)) {
+                err.message = 'Email không được xác thực'
+                err.status = 422;
+                next(err)
+            }
+
+            if (email) {
+                let checkExistEmail = await getUserByEmail(email);
+                if (checkExistEmail) {
+                    err.message = 'Email đã tồn tại'
+                    err.status = 422;
+                    next(err)
                 }
-            )
+            }
+
+            if (password.replace(/\s/g, '').length <= 6) {
+                err.message = 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
+                err.status = 422;
+                next(err)
+            }
+
+            if (password !== confirmPassword) {
+                err.message = 'Mật khẩu xác thực không khớp'
+                err.status = 422;
+                next(err)
+            }
+
+            if (userName) {
+                let checkExistUserName = await getUserByUserName(userName);
+                if (checkExistUserName) {
+                    err.message = 'Username đã tồn tại'
+                    err.status = 422;
+                    next(err)
+                }
+            };
+
+            if (email && password && confirmPassword && userName && age && gender && avatar) {
+
+                await createNewAccount(email, password, userName, age, gender, avatar)
+                err.message = 'Tạo tài khoản thành công'
+                err.status = 422;
+                next(err)
+            }
+        } catch (error) {
+            err.message = error
+            err.status = 422;
+            next(err)
         }
 
 
     },
 
     loginAccount: async (req, res, next) => {
-        const { email, password } = req.body
+        let err = new Error()
+        try {
+            const { email, password } = req.body
+            if (!email || !password) {
+                err.message = 'Bạn cần điền đẩy đủ thông tin'
+                err.status = 422;
+                next(err)
+            };
 
-        if (!email || !password) {
-            res.status(422).json(
-                {
-                    message: 'Cần điền đầy đủ thông tin để tạo tài khoản'
-                }
-            )
-        };
+            if (!validateEmail(email)) {
+                err.message = 'Email không được xác thực'
+                err.status = 422;
+                next(err)
+            }
 
-        if (!validateEmail(email)) {
-            return res.status(422).json(
-                {
-                    message: 'Email không được xác thực'
-                }
-            )
-        }
+            if (password.replace(/\s/g, '').length <= 6) {
+                err.message = 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
+                err.status = 422;
+                next(err)
+            }
 
-        if (password.replace(/\s/g, '').length <= 6) {
-            return res.status(422).json(
-                {
-                    message: 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
-                }
-            )
-        }
+            let checkExistEmail = await getUserByEmail(email);
 
-        let checkExistEmail = await getUserByEmail(email);
+            if (!checkExistEmail) {
+                err.message = 'Email không tồn tại'
+                err.status = 422;
+                next(err)
+            } else {
+                let token = encodeToken(checkExistEmail.id)
+                let hashPassword = checkExistEmail.password
+                bcrypt.compare(password, hashPassword, function (err, result) {
 
-        if (!checkExistEmail) {
-            return res.status(422).json(
-                {
-                    message: 'Email không tồn tại'
-                }
-            )
-        } else {
-            let token = encodeToken(checkExistEmail.id)
-            let hashPassword = checkExistEmail.password
-            bcrypt.compare(password, hashPassword, function (err, result) {
+                    try {
+                        if (result) {
+                            console.log(token);
+                            res.setHeader('Authorization', 'Bearer ' + token)
+                            return res.status(200).json(
+                                {
+                                    status: 200,
+                                    message: 'Login thành công'
+                                }
+                            )
 
-                try {
-                    if (result) {
-                        console.log(token);
-                        res.setHeader('Authorization', 'Bearer ' + token)
-                        return res.status(200).json(
-                            {
-                                message: 'Login thành công'
-                            }
-                        )
-
-                    } else {
-                        return res.status(422).json(
-                            {
-                                message: 'Mật khẩu sai'
-                            }
-                        )
+                        } else {
+                            err.message = 'Mật khẩu sai'
+                            err.status = 422;
+                            next(err)
+                        }
+                    } catch (error) {
+                        err.message = error;
+                        err.status = 404;
+                        next(err)
                     }
-                } catch (error) {
-                    return res.json(error)
-                }
-            });
+                });
 
+            }
+
+        } catch (error) {
+            err.message = error;
+            err.status = 422;
+            next(err)
         }
+
     },
 
     updateInfoAccount: async (req, res, next) => {
@@ -164,53 +154,41 @@ module.exports = {
         let userId = req.user.id
 
         if (!password || !userName || !age || !gender || !avatar) {
-            return res.status(422).json(
-                {
-                    message: 'Cần điền đầy đủ thông tin để cập nhật tài khoản'
-                }
-            )
+            err.message = 'Cần điển đẩy đủ thông tin để cập nhập tài khoản'
+            err.status = 422;
+            next(err)
         }
 
         //xac thuc
 
         if (age < 16) {
-            return res.status(422).json(
-                {
-                    message: 'Bạn không đủ tuổi để đăng kí tài khoản'
-                }
-            )
+            err.message = 'Bạn không đủ tuổi để đăng kí tài khoản'
+            err.status = 422;
+            next(err)
         }
 
         if (gender < 1 || gender > 3) {
-            return res.status(422).json(
-                {
-                    message: 'Giới tính phải nằm trong nam hoặc nữ hoặc giới tính khác'
-                }
-            )
+            err.message = 'Giới tính phải nằm trong nam hoặc nữ hoặc giới tính khác'
+            err.status = 422;
+            next(err)
         }
 
         if (password.replace(/\s/g, '').length <= 6) {
-            return res.status(422).json(
-                {
-                    message: 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
-                }
-            )
+            err.message = 'Mật khẩu cần chứa nhiều hơn 6 kí tự'
+            err.status = 422;
+            next(err)
         }
 
         if (password !== confirmPassword) {
-            return res.status(422).json(
-                {
-                    message: 'Mật khẩu xác thực không khớp'
-                }
-            )
+            err.message = 'Mật khẩu xác thực không khớp'
+            err.status = 422;
+            next(err)
         }
 
         await updateUserByUserId(userId, password, userName, age, gender, avatar)
-        return res.status(200).json(
-            {
-                message: 'Cập nhật tài khoản thành công'
-            }
-        )
+        err.message = 'Cập nhật tài khoản thành công'
+        err.status = 200;
+        next(err)
 
     }
 
